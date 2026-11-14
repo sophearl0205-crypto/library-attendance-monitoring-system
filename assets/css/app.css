@@ -14,3 +14,10 @@
 .form-control:focus,.form-select:focus{border-color:#65a889;box-shadow:0 0 0 .2rem rgba(33,118,83,.12)}
 @media(max-width:800px){.sidebar{width:190px}.main-content{padding:20px}}
 @media(max-width:600px){.app-shell{display:block}.sidebar{width:100%;display:flex;overflow-x:auto;padding:8px}.sidebar-label{display:none}.sidebar a{white-space:nowrap}.main-content{padding:16px}}
+
+/* Dashboard chart sizing: keep labels and legends inside their panels. */
+.chart-wrap{position:relative;width:100%;min-width:0}
+.department-chart-wrap{min-height:300px}
+.visitor-chart-wrap{height:320px;max-width:100%}
+@media(max-width:1199.98px){.visitor-chart-wrap{height:300px}}
+@media(max-width:575.98px){.department-chart-wrap{min-height:280px}.visitor-chart-wrap{height:280px}}
