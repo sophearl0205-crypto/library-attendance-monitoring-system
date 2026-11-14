@@ -1,3 +1,4 @@
+<style>@media print{.app-navbar,.sidebar,.btn,form{display:none!important}.app-shell{display:block}.main-content{padding:0}.panel,.stat-card{box-shadow:none;border:0}.page-heading{color:#000}}</style>
 <?php
 require_once __DIR__ . '/../includes/helpers.php'; require_login(); $pdo=db();
 $from=$_GET['from']??date('Y-m-01'); $to=$_GET['to']??date('Y-m-d'); $dept=(int)($_GET['department_id']??0);
