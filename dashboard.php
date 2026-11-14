@@ -24,7 +24,7 @@ $pageTitle='Dashboard'; require __DIR__.'/includes/header.php';
 const labels=<?=json_encode(array_column($rows,'department_name'),JSON_HEX_TAG|JSON_HEX_APOS)?>;
 const values=<?=json_encode(array_map('intval',array_column($rows,'visits')))?>;
 const deptCanvas=document.getElementById('deptChart');
-deptCanvas.parentElement.style.height=Math.max(300,Math.min(labels.length*32,520))+'px';
+deptCanvas.parentElement.style.height=Math.max(300,Math.min(labels.length*32,760))+'px';
 new Chart(deptCanvas,{type:'bar',data:{labels,datasets:[{label:'Visits',data:values,backgroundColor:'#26845d',borderRadius:6,maxBarThickness:22}]},options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{beginAtZero:true,ticks:{precision:0},grid:{color:'#edf1ee'}},y:{ticks:{autoSkip:false,font:{size:11},callback(value){const label=this.getLabelForValue(value);return label.length>28?label.slice(0,26)+'…':label;}},grid:{display:false}}}}});
 new Chart(document.getElementById('typeChart'),{type:'doughnut',data:{labels:['Students','Faculty'],datasets:[{data:[<?= (int)$pdo->query("SELECT COUNT(*) FROM attendance_records a JOIN persons p ON p.person_id=a.person_id WHERE p.person_type='student'")->fetchColumn()?>,<?= (int)$pdo->query("SELECT COUNT(*) FROM attendance_records a JOIN persons p ON p.person_id=a.person_id WHERE p.person_type='faculty'")->fetchColumn()?>],backgroundColor:['#26845d','#b8d9c7'],borderColor:'#fff',borderWidth:3}]},options:{responsive:true,maintainAspectRatio:false,cutout:'62%',plugins:{legend:{position:'bottom',labels:{usePointStyle:true,pointStyle:'rect',padding:18}}}}});
 </script>
