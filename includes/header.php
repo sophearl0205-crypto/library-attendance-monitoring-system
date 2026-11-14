@@ -21,7 +21,8 @@ function nav_active(string $file): string { global $current; return $current ===
 <div class="sidebar-label">MAIN MENU</div>
 <a class="<?= nav_active('dashboard.php') ?>" href="<?= BASE_URL ?>/dashboard.php">▦ Dashboard</a>
 <a class="<?= nav_active('index.php') && str_contains($_SERVER['REQUEST_URI'] ?? '', '/attendance/') ? 'active' : '' ?>" href="<?= BASE_URL ?>/attendance/index.php">◷ Attendance</a>
-<a class="<?= nav_active('index.php') && str_contains($_SERVER['REQUEST_URI'] ?? '', '/persons/') ? 'active' : '' ?>" href="<?= BASE_URL ?>/persons/index.php">♙ Students &amp; Faculty</a>
-<a class="<?= nav_active('index.php') && str_contains($_SERVER['REQUEST_URI'] ?? '', '/reports/') ? 'active' : '' ?>" href="<?= BASE_URL ?>/reports/index.php">▥ Reports &amp; Analytics</a>
+<a class="<?= str_contains($_SERVER['REQUEST_URI'] ?? '', '/persons/') ? 'active' : '' ?>" href="<?= BASE_URL ?>/persons/index.php">♙ Students &amp; Faculty</a>
+<a class="<?= str_contains($_SERVER['REQUEST_URI'] ?? '', '/departments/') ? 'active' : '' ?>" href="<?= BASE_URL ?>/departments/index.php">▤ Departments</a>
+<a class="<?= str_contains($_SERVER['REQUEST_URI'] ?? '', '/reports/') ? 'active' : '' ?>" href="<?= BASE_URL ?>/reports/index.php">▥ Reports &amp; Analytics</a>
 </aside><?php endif; ?>
 <main class="main-content">
