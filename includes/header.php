@@ -17,13 +17,10 @@ $user = current_user();
 </div></div></nav>
 <div class="app-shell">
 <?php if ($user): ?><aside class="sidebar">
-<div class="sidebar-label">WORKSPACE</div>
+<div class="sidebar-label">MAIN MENU</div>
 <a href="<?= BASE_URL ?>/dashboard.php">▦ Dashboard</a>
 <a href="<?= BASE_URL ?>/attendance/index.php">◷ Attendance</a>
-<a href="<?= BASE_URL ?>/attendance/scan.php">▣ QR Scanner</a>
 <a href="<?= BASE_URL ?>/persons/index.php">♙ Students & Faculty</a>
-<a href="<?= BASE_URL ?>/departments/index.php">▤ Departments</a>
-<a href="<?= BASE_URL ?>/reports/index.php">▥ Analytics & Reports</a>
-<?php if ($user['role']==='admin'): ?><div class="sidebar-label mt-4">ADMINISTRATION</div><a href="<?= BASE_URL ?>/users/index.php">⚙ Users</a><a href="<?= BASE_URL ?>/audit.php">☷ Activity Logs</a><?php endif; ?>
+<a href="<?= BASE_URL ?>/reports/index.php">▥ Reports & Analytics</a>
 </aside><?php endif; ?>
 <main class="main-content">
