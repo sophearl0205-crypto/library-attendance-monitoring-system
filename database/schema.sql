@@ -6,7 +6,7 @@ CREATE TABLE users (
  full_name VARCHAR(150) NOT NULL,
  username VARCHAR(50) NOT NULL UNIQUE,
  password VARCHAR(255) NOT NULL,
- role ENUM('admin','librarian') NOT NULL DEFAULT 'librarian',
+ role ENUM('super_admin','moderator') NOT NULL DEFAULT 'moderator',
  status ENUM('active','inactive') NOT NULL DEFAULT 'active',
  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB;
@@ -27,6 +27,7 @@ CREATE TABLE persons (
  department_id INT UNSIGNED NOT NULL,
  qr_token_hash CHAR(64) NULL UNIQUE,
  status ENUM('active','inactive') NOT NULL DEFAULT 'active',
+ is_demo TINYINT(1) NOT NULL DEFAULT 0,
  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
  CONSTRAINT fk_person_department FOREIGN KEY(department_id) REFERENCES departments(department_id)
 ) ENGINE=InnoDB;
@@ -37,11 +38,13 @@ CREATE TABLE attendance_records (
  attendance_datetime DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
  attendance_method ENUM('manual','qr') NOT NULL,
  recorded_by INT UNSIGNED NOT NULL,
+ is_demo TINYINT(1) NOT NULL DEFAULT 0,
  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
  CONSTRAINT fk_att_person FOREIGN KEY(person_id) REFERENCES persons(person_id),
  CONSTRAINT fk_att_user FOREIGN KEY(recorded_by) REFERENCES users(user_id),
  INDEX idx_att_datetime(attendance_datetime),
- INDEX idx_person_datetime(person_id,attendance_datetime)
+ INDEX idx_person_datetime(person_id,attendance_datetime),
+ INDEX idx_att_demo_datetime(is_demo,attendance_datetime)
 ) ENGINE=InnoDB;
 
 CREATE TABLE audit_logs (

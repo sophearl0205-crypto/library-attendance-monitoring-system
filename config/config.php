@@ -14,14 +14,14 @@ if (is_file($localConfigFile)) {
 
 define('APP_NAME', 'LAMAS');
 define('BASE_URL', (string)($localConfig['base_url'] ?? '/lamas'));
-define('DB_HOST', (string)($localConfig['db_host'] ?? '127.0.0.1'));
-define('DB_NAME', (string)($localConfig['db_name'] ?? 'library_attendance_db'));
-define('DB_USER', (string)($localConfig['db_user'] ?? 'root'));
-define('DB_PASS', (string)($localConfig['db_pass'] ?? ''));
+define('DB_HOST', (string)($localConfig['db_host'] ?? (getenv('LAMAS_DB_HOST') ?: '127.0.0.1')));
+define('DB_NAME', (string)($localConfig['db_name'] ?? (getenv('LAMAS_DB_NAME') ?: '')));
+define('DB_USER', (string)($localConfig['db_user'] ?? (getenv('LAMAS_DB_USER') ?: '')));
+define('DB_PASS', (string)($localConfig['db_pass'] ?? (getenv('LAMAS_DB_PASS') ?: '')));
 
 date_default_timezone_set('Asia/Manila');
 
-if (session_status() !== PHP_SESSION_ACTIVE) {
+if (PHP_SAPI !== 'cli' && session_status() !== PHP_SESSION_ACTIVE) {
     session_set_cookie_params([
         'httponly' => true,
         'secure' => !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off',

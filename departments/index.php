@@ -1,6 +1,6 @@
 <?php
 require_once __DIR__ . '/../includes/helpers.php';
-require_login();
+require_role(['super_admin', 'moderator']);
 $pdo=db(); $error='';
 if($_SERVER['REQUEST_METHOD']==='POST'){
  verify_csrf(); $action=$_POST['action']??'';

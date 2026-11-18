@@ -8,7 +8,7 @@ if ($_SERVER['REQUEST_METHOD']==='POST' && $count===0) {
  $password=$_POST['password']??'';
  if ($name==='' || $username==='' || strlen($password)<10) $error='Enter a name, username, and password of at least 10 characters.';
  else {
-  $stmt=db()->prepare("INSERT INTO users(full_name,username,password,role) VALUES(?,?,?,'admin')");
+  $stmt=db()->prepare("INSERT INTO users(full_name,username,password,role) VALUES(?,?,?,'super_admin')");
   $stmt->execute([$name,$username,password_hash($password,PASSWORD_DEFAULT)]);
   redirect('login.php');
  }
