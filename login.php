@@ -5,9 +5,9 @@ $error='';
 if($_SERVER['REQUEST_METHOD']==='POST'){
  verify_csrf();
  $stmt=db()->prepare("SELECT user_id,full_name,username,password,role,status FROM users WHERE username=? LIMIT 1");
- $stmt->execute([trim($_POST['username']??'')]); $u=$stmt->fetch();
- if($u && $u['status']==='active' && password_verify($_POST['password']??'',$u['password'])){
-  session_regenerate_id(true); unset($u['password']); $_SESSION['user']=$u; redirect('dashboard.php');
+ $stmt->execute([trim(input_string($_POST,'username'))]); $u=$stmt->fetch();
+ if($u && $u['status']==='active' && password_verify(input_string($_POST,'password'),$u['password'])){
+  session_regenerate_id(true); unset($u['password']); $u['role']=normalized_role($u['role']); $_SESSION['user']=$u; redirect('dashboard.php');
  }
  $error='Invalid credentials or inactive account.';
 }

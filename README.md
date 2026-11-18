@@ -1,40 +1,51 @@
 # LAMAS — Library Attendance Monitoring and Analytics System
 
-A simple PHP 8+ and MySQL system for recording library visits by students and faculty.
+LAMAS is a PHP 8.0+ and MySQL/MariaDB application for recording and analyzing library visits by students and faculty. The project keeps its frontend libraries in `assets/vendor/` so the UI, charts, QR generation, and scanner do not depend on a CDN connection.
 
-## Main modules
-1. **Dashboard** — today's visits, total visits, registered people, department totals and recent activity.
-2. **Attendance** — manual attendance and QR-code attendance with a 30-second duplicate-scan guard.
-3. **Students & Faculty** — register, search, edit, activate/deactivate people, assign departments and generate/renew QR codes.
-4. **Reports & Analytics** — date-range and department filters, student/faculty totals, department charts, printable report and CSV export.
+## Development setup (Windows / XAMPP)
 
-## Requirements
-- Windows with XAMPP (PHP 8.1+ and MySQL/MariaDB)
-- Modern browser
-- Internet connection for Bootstrap, Chart.js, QRCode.js and html5-qrcode CDN assets
+1. Place the development checkout at `C:\xampp\htdocs\LAMAS-Development` and start Apache and MySQL.
+2. Create a dedicated local development database. Do not point this checkout at production or at a database containing important records until you have backed it up and reviewed the migration plan.
+3. Copy `config/local.example.php` to `config/local.php` and set the local database connection values and `base_url` to `/LAMAS-Development`. `config/local.php` is ignored by Git; never commit hosting credentials.
+4. For a **brand-new empty development database only**, import `database/schema.sql` once, then visit `http://localhost/LAMAS-Development/setup.php` and create the first Super Admin.
+5. For an existing LAMAS database with an account, sign in and open `http://localhost/LAMAS-Development/database/migrate.php`. Review the displayed upgrade, then choose **Apply pending migrations**. The upgrade adds demo markers and maps legacy `admin`/`librarian` roles to `super_admin`/`moderator`; it does not drop or recreate application tables. If an existing database has no users yet, run the migration from the XAMPP command prompt before opening setup:
 
-## Installation
-1. Clone or copy this repository into `C:\xampp\htdocs\lamas`.
-2. Start Apache and MySQL in XAMPP.
-3. Open phpMyAdmin and import `database/schema.sql`.
-4. Check `config/config.php`. Default XAMPP settings are database `library_attendance_db`, user `root`, and blank password. Update `BASE_URL` if the folder name is different.
-5. Open `http://localhost/lamas/setup.php` and create the first administrator (password must be at least 10 characters).
-6. **Delete `setup.php` after creating the administrator.**
-7. Sign in at `http://localhost/lamas/login.php`.
+   ```powershell
+   C:\xampp\php\php.exe C:\xampp\htdocs\LAMAS-Development\database\migrate.php
+   ```
 
-## QR code workflow
-- Register a person to generate a QR code.
-- Save or print the QR code when it is shown. The raw token is shown only once.
-- The QR scanner records the visit when the librarian submits the scanned token.
-- If a QR code is lost, use the **QR** action to revoke the old token and generate a replacement.
+   Then create the first Super Admin with `setup.php`.
+6. Seed historical sample attendance in the local development database from a command prompt:
 
-## Notes
-- The application records visits; it does not manage books, borrowing, or returns.
-- Departments are seeded from the initial project assumptions. Confirm the department list with the client before using real data.
-- Use synthetic/demo data during development. Back up the database regularly.
-- QR camera access generally requires localhost or HTTPS. CDN libraries require an internet connection.
-- CSV export is available from Reports & Analytics. Use the browser's Print function to save a report as PDF.
-- The database schema is unchanged by the added application pages. Import it once for a fresh installation; do not re-import over an existing database with records.
+   ```powershell
+   C:\xampp\php\php.exe C:\xampp\htdocs\LAMAS-Development\database\seed_demo_data.php
+   ```
 
-## Project status
-Core MVP pages are implemented. Test the complete workflow locally with sample data before presenting or using the system in production.
+   Run the same script with `--remove` to remove marked demo visits and demo-only people. Do not run it against production.
+
+## Roles
+
+- **Super Admin:** full application access, including creating, editing, changing roles, and removing users.
+- **Moderator:** access to application modules and read-only access to the user list. User changes are rejected server-side.
+- Accounts linked to attendance or audit history are deactivated instead of hard-deleted, preserving historical references. The last active Super Admin cannot be removed or demoted.
+
+## Modules
+
+- Dashboard with attendance totals and recent visits.
+- Attendance entry with live name/ID search and a camera scanner that starts only after the user presses **Open Scanner**.
+- Students and faculty registration, search, department assignment, and QR code renewal.
+- User management with role-based authorization.
+- Monthly analytics with year and multi-month filters, custom date ranges, all-time export, CSV, and print-to-PDF layout.
+- Demo attendance is identified by `is_demo` and labeled in attendance/report views and CSV exports.
+
+## Offline behavior and camera access
+
+Bootstrap, Chart.js, QRCode.js, and html5-qrcode are served locally from `assets/vendor/`. Run the PHP and MySQL server locally for offline use. Browser camera access generally requires localhost or HTTPS; access over a plain-HTTP LAN address may not permit camera use.
+
+## Database safety
+
+`database/schema.sql` is for a fresh empty database only. Existing installations must use the additive migration runner. Migrations are recorded in `lamas_schema_migrations` and guard their schema changes so interrupted runs can be retried. Back up the database before applying changes. Demo rows are marked and can be removed with the seeder's `--remove` option.
+
+## Hosting notes
+
+The code uses PDO MySQL and MySQL/MariaDB SQL and is intended for XAMPP and compatible PHP/MySQL shared hosting. The migration page can be run by a Super Admin on hosts where CLI access is unavailable. Keep `config/local.php` out of source control and use HTTPS for hosted access.
